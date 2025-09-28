@@ -1,0 +1,381 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>RYUUMA VAN ASHVYR</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=Share+Tech+Mono&display=swap');
+
+    body {
+      margin: 0;
+      padding: 0;
+      font-family: 'Share Tech Mono', monospace;
+      background: #000;
+      color: #fff;
+      text-align: center;
+      overflow-x: hidden;
+      line-height: 1.8;
+    }
+
+    /* Lapis parallax */
+    .parallax {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -2;
+      background: url('https://images.unsplash.com/photo-1614851097093-3cbdeb18cf5a?ixlib=rb-4.0.3&auto=format&fit=crop&w=1920&q=80') no-repeat center center;
+      background-size: cover;
+      transform: translateY(0);
+      transition: transform 0.1s linear;
+      filter: brightness(0.35) contrast(1.2) saturate(1.5);
+    }
+
+    /* Canvas partikel di atas parallax */
+    #particles {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    /* Tombol play musik */
+    .music-btn {
+      position: fixed;
+      top: 15px;
+      right: 20px;
+      font-size: 22px;
+      cursor: pointer;
+      z-index: 20;
+      color: #0ff;
+      text-shadow: 0 0 8px #0ff, 0 0 15px #0ff, 0 0 25px #00f;
+      transition: transform 0.2s, text-shadow 0.3s;
+    }
+    .music-btn:hover {
+      transform: scale(1.2);
+      text-shadow: 0 0 10px #fff, 0 0 20px #0ff, 0 0 40px #00f;
+    }
+
+    audio {
+      display: none;
+    }
+
+    /* Container utama agar bisa scroll panjang */
+    .container {
+      padding: 60px 20px;
+      max-width: 900px;
+      margin: auto;
+    }
+
+    /* Foto profil */
+    .profile img {
+      width: 170px;
+      height: 170px;
+      border-radius: 50%;
+      border: 5px solid #fff;
+      box-shadow: 0 0 20px #fff, 0 0 40px #888;
+    }
+
+    /* Nama glitch */
+    .glitch {
+      font-size: 30px;
+      font-weight: bold;
+      margin-top: 20px;
+      color: #fff;
+      animation: glitch 1s infinite;
+      text-transform: uppercase;
+    }
+
+    @keyframes glitch {
+      0% { text-shadow: 2px 0 #fff, -2px 0 #888; }
+      20% { text-shadow: -2px -2px #aaa, 2px 2px #fff; }
+      40% { text-shadow: 2px 2px #fff, -2px -2px #555; }
+      60% { text-shadow: -2px 0 #fff, 2px 0 #999; }
+      80% { text-shadow: 2px -2px #666, -2px 2px #fff; }
+      100% { text-shadow: 2px 0 #fff, -2px 0 #888; }
+    }
+
+    /* Bagian kontak */
+    .contact {
+      margin-top: 40px;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      gap: 50px;
+    }
+
+    .contact img {
+      width: 90px;
+      cursor: pointer;
+      transition: transform 0.2s ease;
+    }
+    .contact img:hover {
+      transform: scale(1.15);
+    }
+
+    .dana-box {
+      font-size: 22px;
+      color: #fff;
+    }
+
+    .copy-btn {
+      margin-top: 8px;
+      padding: 8px 14px;
+      font-size: 14px;
+      background: #111;
+      color: #fff;
+      border: 1px solid #444;
+      cursor: pointer;
+      border-radius: 6px;
+      transition: background 0.3s;
+    }
+    .copy-btn:hover {
+      background: #444;
+    }
+
+    /* Banner glitch */
+    .glitch-img {
+      display: inline-block;
+      overflow: hidden;
+      margin-top: 50px;
+    }
+
+    .glitch-img img {
+      display: block;
+      width: 90%;
+      max-width: 780px;
+      border-radius: 15px;
+      box-shadow: 0 0 25px #fff, 0 0 50px #888;
+      cursor: pointer;
+      animation: glitchImgBW 3s infinite;
+      filter: grayscale(100%) contrast(120%);
+    }
+
+    @keyframes glitchImgBW {
+      0% { transform: translate(0); clip-path: inset(0 0 0 0); }
+      20% { transform: translate(-2px, 2px); clip-path: inset(10% 0 85% 0); }
+      40% { transform: translate(2px, -2px); clip-path: inset(40% 0 40% 0); }
+      60% { transform: translate(-1px, 1px); clip-path: inset(70% 0 15% 0); }
+      80% { transform: translate(1px, -1px); clip-path: inset(20% 0 65% 0); }
+      100% { transform: translate(0); clip-path: inset(0 0 0 0); }
+    }
+
+    /* Teks di bawah banner */
+    .banner-text {
+      margin-top: 15px;
+      font-size: 16px;
+      color: #aaa;
+    }
+
+    /* Fee list */
+    .fees {
+      margin: 50px auto;
+      max-width: 700px;
+      display: flex;
+      justify-content: space-between;
+      text-align: left;
+      font-size: 15px;
+      line-height: 2;
+    }
+
+    .fees div {
+      animation: neonBlink 2s infinite alternate;
+    }
+
+    @keyframes neonBlink {
+      0%   { color: #fff; text-shadow: 0 0 5px #0ff, 0 0 10px #0ff; }
+      50%  { color: #aaa; text-shadow: 0 0 3px #555; }
+      100% { color: #fff; text-shadow: 0 0 5px #0ff, 0 0 15px #0ff; }
+    }
+
+    /* Tambahan glitch neon extra */
+    .extra {
+      margin-top: 40px;
+      font-size: 15px;
+      color: #f55;
+      text-shadow: 0 0 5px #f55, 0 0 10px #f55;
+      animation: neonBlinkRed 1.5s infinite alternate;
+    }
+
+    @keyframes neonBlinkRed {
+      0%   { color: #f55; text-shadow: 0 0 5px #f55, 0 0 15px #f55; }
+      50%  { color: #a33; text-shadow: 0 0 3px #700; }
+      100% { color: #f55; text-shadow: 0 0 5px #f55, 0 0 20px #f55; }
+    }
+
+    /* Footer panjang agar bisa scroll */
+    footer {
+      margin-top: 100px;
+      padding: 50px;
+      font-size: 14px;
+      color: #666;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Parallax background -->
+  <div class="parallax"></div>
+
+  <!-- Tombol Musik -->
+  <div class="music-btn" onclick="toggleMusic()">▶️</div>
+
+  <!-- Partikel -->
+  <canvas id="particles"></canvas>
+
+  <!-- Musik -->
+  <audio id="bg-music" autoplay loop>
+    <source src="https://files.catbox.moe/u4ui3m.mp3" type="audio/mpeg">
+  </audio>
+
+  <!-- Konten -->
+  <div class="container">
+    <!-- Profile -->
+    <div class="profile">
+      <a href="https://wa.me//6285187505482">
+        <img src="https://files.catbox.moe/u7sb6v.jpg" alt="Profile">
+      </a>
+    </div>
+
+    <div class="glitch">RYUUMA VAN ASHVYR</div>
+
+    <!-- Contact -->
+    <div class="contact">
+      <div class="dana-box">
+        DANA : 085706645429 <br>
+        <button class="copy-btn" onclick="copyDana()">Salin</button>
+      </div>
+      <a href="https://wa.me/p/24775174708769377/6285187505482">
+        <img src="https://files.catbox.moe/3b2u8u.png" alt="QRIS">
+      </a>
+    </div>
+
+    <!-- Banner -->
+    <a href="https://wa.me//6285187505482" class="glitch-img">
+      <img src="https://files.catbox.moe/jm45ho.jpg" alt="Banner">
+    </a>
+
+    <div class="banner-text">
+      KLIK GAMBAR DIATAS UNTUK MEMULAI CHAT DAN JANGAN LUPA SAVE NOMOR RYUUMA  OK❕❕
+    </div>
+
+    <!-- Fee list -->
+    <div class="fees">
+      <div>
+        1k — 50k : 1k <br>
+        51k — 100k : 2k <br>
+        101k — 200k : 3k <br>
+        201k — 400k : 4k <br>
+        401k — 600k : 5k
+      </div>
+      <div>
+        601k — 700k : 6k <br>
+        701k — 900k : 7k <br>
+        901k — 1jt : 10k <br>
+        1jt — 2jt : 15k
+      </div>
+    </div>
+
+    <div class="extra">
+      ⚠️ 𝗧𝗔𝗠𝗕𝗔𝗛𝗔𝗡 <br>
+      • MC Pending : +5k <br>
+      • All Reff : +5k <br>
+      • No Reff? → ❌ <br>
+      • TRX batal → Fee tetap kepotong
+    </div>
+  </div>
+
+  <footer>
+    © 2025 RYUUMA VAN ASHVYR. All Rights Reserved.
+  </footer>
+
+  <script>
+    function copyDana() {
+      navigator.clipboard.writeText("085706645429").then(() => {
+        alert("Nomor DANA berhasil disalin!");
+      });
+    }
+
+    // Musik play/pause
+    const music = document.getElementById("bg-music");
+    let isPlaying = true;
+
+    function toggleMusic() {
+      if (isPlaying) {
+        music.pause();
+        document.querySelector(".music-btn").textContent = "⏸️";
+      } else {
+        music.play();
+        document.querySelector(".music-btn").textContent = "▶️";
+      }
+      isPlaying = !isPlaying;
+    }
+
+    // Partikel
+    const canvas = document.getElementById('particles');
+    const ctx = canvas.getContext('2d');
+    canvas.width = window.innerWidth;
+    canvas.height = window.innerHeight;
+
+    const particlesArray = [];
+    const colors = ['#fff', '#0ff', '#888'];
+
+    class Particle {
+      constructor() {
+        this.x = Math.random() * canvas.width;
+        this.y = Math.random() * canvas.height;
+        this.size = Math.random() * 2 + 1;
+        this.speedX = Math.random() * 1 - 0.5;
+        this.speedY = Math.random() * 1 - 0.5;
+        this.color = colors[Math.floor(Math.random() * colors.length)];
+      }
+      update() {
+        this.x += this.speedX;
+        this.y += this.speedY;
+        if (this.x < 0 || this.x > canvas.width) this.speedX *= -1;
+        if (this.y < 0 || this.y > canvas.height) this.speedY *= -1;
+      }
+      draw() {
+        ctx.fillStyle = this.color;
+        ctx.beginPath();
+        ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+        ctx.fill();
+      }
+    }
+
+    function init() {
+      for (let i = 0; i < 120; i++) {
+        particlesArray.push(new Particle());
+      }
+    }
+
+    function animate() {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      particlesArray.forEach(particle => {
+        particle.update();
+        particle.draw();
+      });
+      requestAnimationFrame(animate);
+    }
+
+    init();
+    animate();
+
+    window.addEventListener('resize', () => {
+      canvas.width = window.innerWidth;
+      canvas.height = window.innerHeight;
+    });
+
+    // Parallax effect
+    const parallax = document.querySelector('.parallax');
+    window.addEventListener('scroll', () => {
+      let scrollTop = window.scrollY;
+      parallax.style.transform = `translateY(${scrollTop * 0.5}px)`; 
+    });
+  </script>
+</body>
+</html>
